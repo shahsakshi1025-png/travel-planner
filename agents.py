@@ -1,9 +1,20 @@
 from groq import Groq
+from dotenv import load_dotenv
+from pathlib import Path
+import os
 
-client = Groq(api_key="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")
+load_dotenv(dotenv_path=Path(__file__).with_name('.env'))
 
 def call_llm(prompt):
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        return (
+            "Error: GROQ_API_KEY is not set. "
+            "Please set GROQ_API_KEY in your environment or in the .env file."
+        )
+
     try:
+        client = Groq(api_key=api_key)
         chat_completion = client.chat.completions.create(
             messages=[
                 {"role": "user", "content": prompt}
